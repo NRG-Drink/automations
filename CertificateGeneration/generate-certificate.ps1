@@ -3,7 +3,7 @@
 
 # Ask for certificate name.
 $name = Read-Host "Enter certifiacte name"
-Write-Host " -> $name"
+Write-Host "  -> $name"
 $exportDirPath = ".secrets.$name"
 $certStore = "cert:\CurrentUser\My"
 
