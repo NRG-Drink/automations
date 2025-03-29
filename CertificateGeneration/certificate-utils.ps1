@@ -30,7 +30,7 @@ function Start-CreateAndInstallCertificate {
             -FriendlyName $Name `
             -ErrorAction Stop
     
-        Write-Host "Certificate is created and installed at '$CertStore'"
+        Write-Host "  Certificate is created and installed at '$CertStore'"
         return $cert
     }
     catch {
@@ -55,7 +55,7 @@ function Start-ExportPublicKey {
                 -ErrorAction Stop `
             | Out-Null
     
-        Write-Host "Certificate public-key exported at '$file'"
+        Write-Host "  Certificate public-key exported at '$file'"
     }
     catch {
         Write-Error "Error in export public-key: $_"
@@ -79,7 +79,7 @@ function Start-ExportPrivateKey {
                 -ErrorAction Stop `
             | Out-Null
             
-        Write-Host "Certificate private-key exported at '$file'"
+        Write-Host "  Certificate private-key exported at '$file'"
     }
     catch {
         Write-Error "Error in export private-key: $_"
@@ -112,7 +112,7 @@ function Start-ExportCertificateProperties {
             | Select-Object Name, Thumbprint, StartDate, EndDate, PublishDate, Publisher, Password `
             > $file
     
-        Write-Host "Certificate properties exported at '$file'"
+        Write-Host "  Certificate properties exported at '$file'"
     }
     catch {
         Write-Error "Error in cert-property export: $_"
@@ -130,7 +130,7 @@ function Remove-Certificate {
     try {
         Remove-Item -Path $path -ErrorAction Stop
 
-        Write-Host "Certificate removed '$path'"
+        Write-Host "  Certificate removed '$path'"
     }
     catch {
         Write-Error "Error in remove certificate: $_"

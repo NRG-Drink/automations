@@ -3,7 +3,7 @@
 
 # Ask for certificate name.
 $name = Read-Host "Enter certifiacte name"
-Write-Host "-> $name"
+Write-Host " -> $name"
 $exportDirPath = ".secrets.$name"
 $certStore = "cert:\CurrentUser\My"
 
@@ -19,18 +19,19 @@ if (Test-Path $exportDirPath) {
 $certificates = Get-CertificatesByName -Name $name -Store $certStore
 if ($certificates) {
     # Print duplicate certificates.
+    Write-Warning "Found installed certificates with same name: (Name: '$name', Store: '$certStore')"
     $certificates | Format-List
 
     # Write warning.
-    Write-Warning ("A certificate with the same name is already installed. (Name: $name, Store: $certStore)")
-    Write-Host "Certificates with the same name are confusing but works for the computer."
+    Write-Warning ("A certificate with the same name is already installed. (Name: '$name', Store: '$certStore')")
+    Write-Host "  Certificates with the same name are confusing but works for the computer."
     
     # Ask proceed.
     $duplicateResponse = Read-Host "Do you want to proceed? (y|n) "
     if ($duplicateResponse -eq 'Y' -or $duplicateResponse -eq 'y') {
-        Write-Host "-> yes proceeding with the operation."
+        Write-Host "  -> yes proceeding with the operation."
     } else {
-        Write-Host "Operation canceled."
+        Write-Host "  Operation canceled."
         return 
     }
 } 
@@ -44,7 +45,7 @@ $certFilePathPart = "$exportDirPath\$name"
 
 # Create export folder.
 New-Item $exportDirPath -ItemType Directory | Out-Null
-Write-Host "Export folder created '$exportDirPath'\"
+Write-Host "  Export folder created '$exportDirPath'\"
 
 # Create and export certificate.
 $cert = Start-CreateAndInstallCertificate -Name $name -EndDate $endDate -CertStore $certStore
@@ -56,13 +57,13 @@ Start-ExportCertificateProperties -CertFilePathPart $certFilePathPart -Certifica
 # Ask deinstall certificate.
 $deinstallResponse = Read-Host "Do you want to deinstall the certificate? (y|n) "
 if ($deinstallResponse -eq 'Y' -or $deinstallResponse -eq 'y') {
-    Write-Host "-> yes (deinstall certificate)"
+    Write-Host "  -> yes (deinstall certificate)"
     Remove-Certificate -Thumbprint $cert.Thumbprint -Store $certStore
 }
 
 # Ask open export folder.
 $openFolderResponse = Read-Host "Do you want to open the export folder? (y|n) "
 if ($openFolderResponse -eq 'Y' -or $openFolderResponse -eq 'y') {
-    Write-Host "-> yes (open export folder)"
+    Write-Host "  -> yes (open export folder)"
     Invoke-Item $exportDirPath
 }
