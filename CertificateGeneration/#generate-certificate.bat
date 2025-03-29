@@ -1,1 +1,2 @@
-start powershell generate-certificate.ps1
+pwsh generate-certificate.ps1
+pause
