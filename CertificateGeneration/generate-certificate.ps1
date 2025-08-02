@@ -8,8 +8,6 @@ $certStore = "cert:\CurrentUser\My"
 $exportDirPath = ".secrets.$name"
 $certFilePathPart = "$exportDirPath\$name"
 
-Remove-Item $exportDirPath -Recurse -Force
-
 #region Checks
 # Check existing output folder.
 if (Test-Path $exportDirPath) {
