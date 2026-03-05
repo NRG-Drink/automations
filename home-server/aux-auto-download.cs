@@ -21,7 +21,24 @@ if (!response.IsSuccessStatusCode)
 
 var items = await response.Content.ReadFromJsonAsync(AuxContext.Default.Root);
 
-foreach (var item in items?.Results ?? [])
+// Print download schedule properties and title for all items.
+// var sortedItems = items?.Results
+//     .OrderBy(e => e.Media.AutoDownloadEpisodes)
+//     .ToArray();
+// foreach (var item in sortedItems ?? [])
+// {
+//     System.Console.WriteLine($"{item.Media.AutoDownloadEpisodes}\t{item.Media.AutoDownloadSchedule}\t'{item.Media.Metadata.Title}'");
+// }
+// return;
+
+var autodownloadItems = items?.Results
+    // Resson: Stopped production.
+    .Where(e => !e.Media.Metadata.Title.StartsWith("TED-Ed", StringComparison.OrdinalIgnoreCase))
+    // Resson: Stopped production.
+    .Where(e => !e.Media.Metadata.Title.StartsWith("Wissenschaftsmagazin", StringComparison.OrdinalIgnoreCase));
+// var nonAutodownloadItems = items?.Results.Except(autodownloadItems ?? []).ToArray();
+
+foreach (var item in autodownloadItems ?? [])
 {
     var r = await client.PatchAsync(
         $"https://aux.tail976322.ts.net/api/items/{item.Id}/media",
@@ -39,6 +56,7 @@ foreach (var item in items?.Results ?? [])
 }
 
 #region Models
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 // Root myDeserializedClass = JsonSerializer.Deserialize<Root>(myJsonResponse);
 public class Media
 {
@@ -222,4 +240,5 @@ public class Root
 [JsonSerializable(typeof(List<string>))]
 [JsonSerializable(typeof(List<object>))]
 internal partial class AuxContext : JsonSerializerContext { }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 #endregion
